@@ -54,16 +54,18 @@ void init_loadGeode(void) {
 
 	if (!geode_exists) {
 
-NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
-NSURL  *url = [NSURL URLWithString:stringURL];
-NSData *urlData = [NSData dataWithContentsOfURL:url];
-if ( urlData )
-{
+		NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
+		NSURL  *url = [NSURL URLWithString:stringURL];
+		NSData *urlData = [NSData dataWithContentsOfURL:url];
+		if ( urlData )
+		{
+		
+		  NSString  *filePath = [NSString stringWithFormat:@"%@/%@", geode_dir,@"Geode.ios.dylib"];
+		  [urlData writeToFile:filePath atomically:YES];
+		}
 
-  NSString  *filePath = [NSString stringWithFormat:@"%@/%@", geode_dir,@"Geode.ios.dylib"];
-  [urlData writeToFile:filePath atomically:YES];
-}
-
+	} else {
+ 		showAlert(@"quoicoubeh", [NSString stringWithFormat:@"yes %@", geode_lib], false);
 	}
 
 	if ([fm fileExistsAtPath:geode_env]) {
