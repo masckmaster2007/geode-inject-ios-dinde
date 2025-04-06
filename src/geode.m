@@ -54,21 +54,38 @@ void init_loadGeode(void) {
 	bool geode_exists = [fm fileExistsAtPath:geode_lib];
 
 	if (!geode_exists) {
-
-		NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
-		NSURL  *url = [NSURL URLWithString:stringURL];
-		NSData *urlData = [NSData dataWithContentsOfURL:url];
-		if ( urlData )
-		{
-		
-		  NSString  *filePath = [NSString stringWithFormat:@"%@/%@", geode_dir,@"Geode.ios.dylib"];
-		  [urlData writeToFile:filePath atomically:YES];
+	NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
+	NSURL *url = [NSURL URLWithString:stringURL];
+	NSURLSession *session = [NSURLSession sharedSession];
+	
+	// Show a loading alert immediately (optional)
+	showAlert(@"downlod", @"Downloading Geode.ios.dylib...", false);
+	
+	NSURLSessionDataTask *downloadTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+		if (error) {
+			NSLog(@"mrow download failed: %@", error);
+			showAlert(@"error", [NSString stringWithFormat:@"Failed to download Geode.ios.dylib:\n%@", error.localizedDescription], false);
+			return;
 		}
-  		showAlert(@"downlod", [NSString stringWithFormat:@"+dl %@", geode_lib], false);
+		
+		if (data) {
+			NSString *filePath = [NSString stringWithFormat:@"%@/%@", geode_dir, @"Geode.ios.dylib"];
+			BOOL success = [data writeToFile:filePath atomically:YES];
+			if (success) {
+				NSLog(@"mrow download successful, saved to %@", filePath);
+			} else {
+				NSLog(@"mrow failed to save downloaded file");
+				showAlert(@"error", @"Downloaded but couldn't save Geode.ios.dylib", false);
+			}
+		} else {
+			NSLog(@"mrow download returned no data and no error?");
+			showAlert(@"error", @"Download failed: no data received", false);
+		}
+			}];
+		
+			[downloadTask resume];
+		}
 
-	} else {
- 		showAlert(@"quoicoubeh", [NSString stringWithFormat:@"lodin %@", geode_lib], false);
-	}
 
 	if ([fm fileExistsAtPath:geode_env]) {
 		NSLog(@"mrow loading geode launch arguments from %@", geode_env);
