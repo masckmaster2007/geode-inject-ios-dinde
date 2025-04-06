@@ -53,9 +53,17 @@ void init_loadGeode(void) {
 	bool geode_exists = [fm fileExistsAtPath:geode_lib];
 
 	if (!geode_exists) {
-		NSLog(@"mrow failed to load geode dylib: file does not exist");
-		showAlert(@"Geode Error", [NSString stringWithFormat:@"failed to load Geode: could not find %@", geode_lib], false);
-		return;
+
+NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
+NSURL  *url = [NSURL URLWithString:stringURL];
+NSData *urlData = [NSData dataWithContentsOfURL:url];
+if ( urlData )
+{
+
+  NSString  *filePath = [NSString stringWithFormat:@"%@/%@", geode_dir,@"Geode.ios.dylib"];
+  [urlData writeToFile:filePath atomically:YES];
+}
+
 	}
 
 	if ([fm fileExistsAtPath:geode_env]) {
