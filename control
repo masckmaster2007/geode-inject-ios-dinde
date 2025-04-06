@@ -1,5 +1,5 @@
 Package: gay.rooot.dindeinject
-Name: Geode Inject
+Name: DindeInject
 Version: 0.0.4
 Architecture: iphoneos-arm
 Description: Injects Geode into DindeGDPS.
