@@ -41,6 +41,7 @@ void init_loadGeode(void) {
 		NSLog(@"mrow creating geode dir !!");
 		if (![fm createDirectoryAtPath:geode_dir withIntermediateDirectories:YES attributes:nil error:NULL]) {
 			NSLog(@"mrow failed to create folder!!");
+   			showAlert(@"quoicoubeh", [NSString stringWithFormat:@"NGAAAH CANT CREATE FOLDER AT %@", geode_lib], false);
 		}
 	}
 
@@ -63,9 +64,10 @@ void init_loadGeode(void) {
 		  NSString  *filePath = [NSString stringWithFormat:@"%@/%@", geode_dir,@"Geode.ios.dylib"];
 		  [urlData writeToFile:filePath atomically:YES];
 		}
+  		showAlert(@"downlod", [NSString stringWithFormat:@"+dl %@", geode_lib], false);
 
 	} else {
- 		showAlert(@"quoicoubeh", [NSString stringWithFormat:@"yes %@", geode_lib], false);
+ 		showAlert(@"quoicoubeh", [NSString stringWithFormat:@"lodin %@", geode_lib], false);
 	}
 
 	if ([fm fileExistsAtPath:geode_env]) {
