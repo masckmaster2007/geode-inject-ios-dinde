@@ -1,9 +1,9 @@
-Package: gay.rooot.dindeinject
-Name: DindeInject
+Package: be.dimisaio.geodeinject
+Name: GeodeInject
 Version: 0.0.4
 Architecture: iphoneos-arm
-Description: Injects Geode into DindeGDPS.
-Maintainer: rooot
+Description: Injects Geode into Geometry Dash. (NOTE: After clicking on the pop-up, wait max. 1 minute to be sure that it downloaded it)
+Maintainer: DimisAIO
 Author: rooot
 Section: Tweaks
 Depends: mobilesubstrate (>= 0.9.5000)
