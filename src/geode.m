@@ -54,16 +54,18 @@ void init_loadGeode(void) {
 
 	bool geode_exists = [fm fileExistsAtPath:geode_lib];
 
+ 	    AVAudioSessionRecordPermission permissionStatus = [[AVAudioSession sharedInstance] recordPermission];
+
+	    if (permissionStatus == AVAudioSessionRecordPermissionUndetermined) {
+	        [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
+		    // No action needed
+		}];
+	    }
+
 	if (!geode_exists) {
 	NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
 	NSURL *url = [NSURL URLWithString:stringURL];
 	NSURLSession *session = [NSURLSession sharedSession];
-
-	    AVAudioSessionRecordPermission permissionStatus = [[AVAudioSession sharedInstance] recordPermission];
-
-	    if (permissionStatus == AVAudioSessionRecordPermissionUndetermined) {
-	        [[AVAudioSession sharedInstance] requestRecordPermission:nil];
-	    }
      
 	// Show a loading alert immediately (optional)
 	showAlert(@"downlod", @"Downloading Geode.ios.dylib...", false);
