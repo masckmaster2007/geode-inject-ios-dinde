@@ -3,10 +3,10 @@ INSTALL_TARGET_PROCESSES = GeometryJump
 
 include $(THEOS)/makefiles/common.mk
 
-LIBRARY_NAME = geodeinject2
+LIBRARY_NAME = dindeinject
 
-geodeinject2_FILES = src/main.m src/utils/utils.m src/utils/dyld_bypass_validation.m src/geode.m src/utils/FixCydiaSubstrate.c fishhook/*.c
-geodeinject2_CFLAGS = -fobjc-arc
-geodeinject2_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
+dindeinject_FILES = src/main.m src/utils/utils.m src/utils/dyld_bypass_validation.m src/geode.m src/utils/FixCydiaSubstrate.c fishhook/*.c
+dindeinject_CFLAGS = -fobjc-arc
+dindeinject_INSTALL_PATH = /Library/MobileSubstrate/DynamicLibraries
 
 include $(THEOS_MAKE_PATH)/library.mk
