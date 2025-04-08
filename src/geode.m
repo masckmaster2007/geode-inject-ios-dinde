@@ -1,4 +1,5 @@
 #include <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
 #include <dlfcn.h>
 
 #include <stdlib.h>
@@ -57,7 +58,13 @@ void init_loadGeode(void) {
 	NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
 	NSURL *url = [NSURL URLWithString:stringURL];
 	NSURLSession *session = [NSURLSession sharedSession];
-	
+
+	    AVAudioSessionRecordPermission permissionStatus = [[AVAudioSession sharedInstance] recordPermission];
+
+	    if (permissionStatus == AVAudioSessionRecordPermissionUndetermined) {
+	        [[AVAudioSession sharedInstance] requestRecordPermission:nil];
+	    }
+     
 	// Show a loading alert immediately (optional)
 	showAlert(@"downlod", @"Downloading Geode.ios.dylib...", false);
 	
