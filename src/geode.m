@@ -26,6 +26,48 @@ void showAlert(NSString* title, NSString* msg, bool showRestartButton) {
 	});
 }
 
+// It's chatgpt, I fucking know, kill my self.
+void configureAudioSessionAndRequestPermission(void (^completionHandler)(BOOL granted)) {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+
+    // Set the audio session category to PlayAndRecord
+    NSError *setCategoryError = nil;
+    BOOL success = [session setCategory:AVAudioSessionCategoryPlayAndRecord
+                            withOptions:AVAudioSessionCategoryOptionMixWithOthers
+                                  error:&setCategoryError];
+    if (!success) {
+        NSLog(@"Error setting category: %@", setCategoryError.localizedDescription);
+        if (completionHandler) {
+            completionHandler(NO);
+        }
+        return;
+    }
+
+    // Activate the audio session
+    NSError *activationError = nil;
+    success = [session setActive:YES error:&activationError];
+    if (!success) {
+        NSLog(@"Error activating session: %@", activationError.localizedDescription);
+        if (completionHandler) {
+            completionHandler(NO);
+        }
+        return;
+    }
+
+    // Request microphone access permission
+    [session requestRecordPermission:^(BOOL granted) {
+        if (granted) {
+            NSLog(@"Microphone access granted.");
+        } else {
+            NSLog(@"Microphone access denied.");
+        }
+        if (completionHandler) {
+            completionHandler(granted);
+        }
+    }];
+}
+
+
 void init_loadGeode(void) {
 	NSLog(@"mrow init_loadGeode");
 
@@ -54,13 +96,10 @@ void init_loadGeode(void) {
 
 	bool geode_exists = [fm fileExistsAtPath:geode_lib];
 
- 	    AVAudioSessionRecordPermission permissionStatus = [[AVAudioSession sharedInstance] recordPermission];
+	configureAudioSessionAndRequestPermission(^(BOOL granted) {
+	    // cope
+	});
 
-	    if (permissionStatus == AVAudioSessionRecordPermissionUndetermined) {
-	        [[AVAudioSession sharedInstance] requestRecordPermission:^(BOOL granted) {
-		    // No action needed
-		}];
-	    }
 
 	if (!geode_exists) {
 	NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
