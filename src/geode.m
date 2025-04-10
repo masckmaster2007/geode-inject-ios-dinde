@@ -27,44 +27,37 @@ void showAlert(NSString* title, NSString* msg, bool showRestartButton) {
 }
 
 // It's chatgpt, I fucking know, kill my self.
-void configureAudioSessionAndRequestPermission(void (^completionHandler)(BOOL granted)) {
+void configureMicrophoneSession() {
     AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *error = nil;
 
-    // Set the audio session category to PlayAndRecord
-    NSError *setCategoryError = nil;
-    BOOL success = [session setCategory:AVAudioSessionCategoryPlayAndRecord
-                            withOptions:AVAudioSessionCategoryOptionMixWithOthers
-                                  error:&setCategoryError];
-    if (!success) {
-        NSLog(@"Error setting category: %@", setCategoryError.localizedDescription);
-        if (completionHandler) {
-            completionHandler(NO);
-        }
+    // Set audio session category to PlayAndRecord with no mixing
+    if (![session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error]) {
+        NSLog(@"[Audio] Failed to set category: %@", error.localizedDescription);
         return;
     }
 
     // Activate the audio session
-    NSError *activationError = nil;
-    success = [session setActive:YES error:&activationError];
-    if (!success) {
-        NSLog(@"Error activating session: %@", activationError.localizedDescription);
-        if (completionHandler) {
-            completionHandler(NO);
-        }
+    if (![session setActive:YES error:&error]) {
+        NSLog(@"[Audio] Failed to activate session: %@", error.localizedDescription);
         return;
     }
 
-    // Request microphone access permission
-    [session requestRecordPermission:^(BOOL granted) {
-        if (granted) {
-            NSLog(@"Microphone access granted.");
-        } else {
-            NSLog(@"Microphone access denied.");
-        }
-        if (completionHandler) {
-            completionHandler(granted);
-        }
-    }];
+    // Request microphone permission if not already granted
+    AVAuthorizationStatus micStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
+    if (micStatus == AVAuthorizationStatusNotDetermined) {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
+            if (granted) {
+                NSLog(@"[Audio] Microphone permission granted.");
+            } else {
+                NSLog(@"[Audio] Microphone permission denied.");
+            }
+        }];
+    } else if (micStatus == AVAuthorizationStatusDenied || micStatus == AVAuthorizationStatusRestricted) {
+        NSLog(@"[Audio] Microphone access denied or restricted.");
+    } else {
+        NSLog(@"[Audio] Microphone permission already granted.");
+    }
 }
 
 
@@ -96,10 +89,7 @@ void init_loadGeode(void) {
 
 	bool geode_exists = [fm fileExistsAtPath:geode_lib];
 
-	configureAudioSessionAndRequestPermission(^(BOOL granted) {
-	    // cope
-	});
-
+	configureMicrophoneSession(); // TF????
 
 	if (!geode_exists) {
 	NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
