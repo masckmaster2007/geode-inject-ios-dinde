@@ -95,9 +95,9 @@ void init_loadGeode(void) {
 
 	if ([fm fileExistsAtPath:geode_update_file]) {
 		if (geode_exists) {
-			fm.removeItem(atPath: geode_lib)
+			[fm removeItemAtPath:geode_lib error:nil];
  		}
-   		fm.moveItem(atPath: geode_update_file, toPath: geode_lib)
+   		[fm moveItemAtPath:geode_update_file toPath:geode_lib error:nil];
  	}
  
 	if ([fm fileExistsAtPath:geode_env]) {
