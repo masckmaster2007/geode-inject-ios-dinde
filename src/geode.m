@@ -26,46 +26,18 @@ void showAlert(NSString* title, NSString* msg, bool showRestartButton) {
 	});
 }
 
-// It's chatgpt, I fucking know, kill my self.
-void configureMicrophoneSession() {
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    NSError *error = nil;
-
-    // Set audio session category to PlayAndRecord with no mixing
-    if (![session setCategory:AVAudioSessionCategoryPlayAndRecord error:&error]) {
-        NSLog(@"[Audio] Failed to set category: %@", error.localizedDescription);
-        return;
-    }
-
-    // Activate the audio session
-    if (![session setActive:YES error:&error]) {
-        NSLog(@"[Audio] Failed to activate session: %@", error.localizedDescription);
-        return;
-    }
-
-    // Request microphone permission if not already granted
-    AVAuthorizationStatus micStatus = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeAudio];
-    if (micStatus == AVAuthorizationStatusNotDetermined) {
-        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeAudio completionHandler:^(BOOL granted) {
-            if (granted) {
-                NSLog(@"[Audio] Microphone permission granted.");
-            } else {
-                NSLog(@"[Audio] Microphone permission denied.");
-            }
-        }];
-    } else if (micStatus == AVAuthorizationStatusDenied || micStatus == AVAuthorizationStatusRestricted) {
-        NSLog(@"[Audio] Microphone access denied or restricted.");
-    } else {
-        NSLog(@"[Audio] Microphone permission already granted.");
-    }
-}
-
-
 void init_loadGeode(void) {
 	NSLog(@"mrow init_loadGeode");
 
+	// NSDocumentDirectory
+	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString* documentsDirectory = [paths firstObject];
+
+ 	// NSApplicationSupportDirectory
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString* applicationSupportDirectory = [paths firstObject];
+
+	NSString* geode_update_file = [documentsDirectory stringByAppendingString:@"/game/geode/update/Geode.ios.dylib"];
 
 	NSString* geode_dir = [applicationSupportDirectory stringByAppendingString:@"/GeometryDash/game/geode"];
 	NSString* geode_lib = [geode_dir stringByAppendingString:@"/Geode.ios.dylib"];
@@ -88,8 +60,6 @@ void init_loadGeode(void) {
 	setenv("GEODEINJECT_LOADED", "1", 1); 
 
 	bool geode_exists = [fm fileExistsAtPath:geode_lib];
-
-	configureMicrophoneSession(); // TF????
 
 	if (!geode_exists) {
 	NSString *stringURL = @"https://github.com/masckmaster2007/geode-inject-ios-dinde/releases/download/wtf/Geode.ios.dylib";
@@ -124,7 +94,13 @@ void init_loadGeode(void) {
 			[downloadTask resume];
 		}
 
-
+	if ([fm fileExistsAtPath:geode_update_file]) {
+		if (geode_exists) {
+			fm.removeItemAtPath(geode_lib)
+ 		}
+   		fm.moveItemAtURL(geode_update_file, toURL: geode_lib)
+ 	}
+ 
 	if ([fm fileExistsAtPath:geode_env]) {
 		NSLog(@"mrow loading geode launch arguments from %@", geode_env);
 		NSString* envContent = [NSString stringWithContentsOfFile:geode_env encoding:NSUTF8StringEncoding error:nil];
