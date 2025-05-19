@@ -1,5 +1,4 @@
 #include <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
 #include <dlfcn.h>
 
 #include <stdlib.h>
@@ -30,8 +29,8 @@ void init_loadGeode(void) {
 	NSLog(@"mrow init_loadGeode");
 
 	// NSDocumentDirectory
-	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString* documentsDirectory = [paths firstObject];
+	NSArray* paths1 = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString* documentsDirectory = [paths1 firstObject];
 
  	// NSApplicationSupportDirectory
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
@@ -96,9 +95,9 @@ void init_loadGeode(void) {
 
 	if ([fm fileExistsAtPath:geode_update_file]) {
 		if (geode_exists) {
-			fm.removeItemAtPath(geode_lib)
+			fm.removeItem(atPath: geode_lib)
  		}
-   		fm.moveItemAtURL(geode_update_file, toURL: geode_lib)
+   		fm.moveItem(atPath: geode_update_file, toPath: geode_lib)
  	}
  
 	if ([fm fileExistsAtPath:geode_env]) {
