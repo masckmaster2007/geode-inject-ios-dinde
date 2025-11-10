@@ -134,6 +134,8 @@ void init_loadGeode(void) {
 
 	NSLog(@"mrow trying to load Geode library from %@", geode_lib);
 
+	sleep(1); // jit moment
+
 	dlopen([geode_lib UTF8String], RTLD_LAZY);
 
 	NSLog(@"mrow inhibiting screen sleep (in 1s)");
