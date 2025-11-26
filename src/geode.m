@@ -134,7 +134,7 @@ void init_loadGeode(void) {
 
 	NSLog(@"mrow trying to load Geode library from %@", geode_lib);
 
-	sleep(1); // jit moment
+	sleep(2); // jit moment
 
 	dlopen([geode_lib UTF8String], RTLD_LAZY);
 
